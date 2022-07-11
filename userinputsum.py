@@ -1,0 +1,10 @@
+a=input("Enter First number")
+print(type(a))
+b=input("enetr Second number")
+print(type(b))
+c=int(a)+int(b)
+#c=int(a+b)
+print("sum=",c)
+
+d=int(input("enter any number"))
+print(type(d))
