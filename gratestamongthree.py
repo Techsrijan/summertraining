@@ -7,7 +7,9 @@ if a>b:
         print("A is greatest")
     else:
         print("C is greatest")
-elif b>c:
-    print("B is greatest")
+
 else:
-    print("C is greatest")
+    if b>c:
+      print("B is greatest")
+    else:
+      print("C is greatest")
