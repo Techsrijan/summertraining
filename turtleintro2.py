@@ -1,5 +1,7 @@
 from turtle import *
 t=Turtle()
+s=Screen()
+s.setup(width=800,height=600)
 
 def shape():
     for i in range(3):
