@@ -1,0 +1,11 @@
+import calendar
+#print(calendar.month(2022,7))
+print(calendar.calendar(2022))
+print(calendar.isleap(2000))
+print(calendar.leapdays(2100,2200))
+print(calendar.isleap(2100))
+print(calendar.isleap(2101))
+print(calendar.isleap(2102))
+print(calendar.isleap(2103))
+print(calendar.isleap(2104))
+print(calendar.weekday(2002,7,26))
