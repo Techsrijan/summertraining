@@ -1,0 +1,27 @@
+from tkinter import *
+from tkinter.ttk import Combobox
+root=Tk()
+def getdata():
+    print(i.get())
+l=LabelFrame(root,text="Select Gender")
+i=IntVar()
+r1=Radiobutton(l,text="Male",value=1,variable=i)
+r2=Radiobutton(l,text="Female",value=2,variable=i)
+r1.pack()
+r2.pack()
+l.pack()
+j=IntVar()
+r3=Radiobutton(root,text="SC",value=1,variable=j)
+r4=Radiobutton(root,text="ST",value=2,variable=j)
+r5=Radiobutton(root,text="OBC",value=3,variable=j)
+r6=Radiobutton(root,text="GENERAL",value=4,variable=j)
+r3.pack()
+r4.pack()
+r5.pack()
+r6.pack()
+btn2 = Button(root, text="getdata",
+                font=("comic Sans Ms", 10, "bold"), fg="green", command=getdata)
+btn2.pack()
+root.geometry("600x800+120+300")
+#root.resizable(0,0)
+root.mainloop()
