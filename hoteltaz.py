@@ -1,11 +1,14 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
 import pymysql
 from PIL import Image,ImageTk
 
 
 taz=Tk()
 
+# ========mainTreeView======================
+tazTV = ttk.Treeview(height=10, columns=('Item Name''Rate','Type'))
 user_icon=ImageTk.PhotoImage(Image.open('images/user.png'))
 
 def only_char_input(P):
@@ -32,6 +35,7 @@ def db_connect():
     global mycursor, connection
     connection = pymysql.connect(user="root", host="127.0.0.1", db="summer")
     mycursor = connection.cursor()
+
 
 ############mainheading##############
 def mainheading():
@@ -89,6 +93,37 @@ def login_window():
     loginButton = Button(taz, text="Login", width=20, height=2, fg="green", bd=10, command=adminlogin)
     loginButton.grid(row=4, column=1, columnspan=2)
 
+################ ondouble click get data ##############
+def OnDoubleClick(event):
+    item = tazTV.selection()
+    itemNameVar1 = tazTV.item(item, "text")
+    item_detail = tazTV.item(item, "values")
+    print(itemNameVar1)
+    print(item_detail)
+
+    itemnameVar.set(itemNameVar1)
+    itemrateVar.set(item_detail[0])
+    itemTypeVar.set(item_detail[1])
+
+############ get Item in tree view ###############
+def getItemInTreeView():
+    # to delete already inserted item
+    records = tazTV.get_children()
+
+    for element in records:
+        tazTV.delete(element)
+
+    # insert data in treeview
+    conn = pymysql.connect(host="localhost", user="root", db="summer")
+    mycursor = conn.cursor(pymysql.cursors.DictCursor)
+    query = "select * from itemlist"
+    mycursor.execute(query)
+    data = mycursor.fetchall()
+    #print(data)
+    for row in data:
+        tazTV.insert('', 'end', text=row['item_name'], values=(row["item_rate"], row["item_type"]))
+    conn.close()
+    tazTV.bind("<Double-1>", OnDoubleClick)
 
 def additem():
     name = itemnameVar.get()
@@ -96,6 +131,12 @@ def additem():
     type = itemTypeVar.get()
     print(name, rate, type)
     db_connect()
+    '''
+    que="select * from itemlist where item_name=%s"
+    val=(name)
+    mycursor.execute(que, val)
+    print("item already added")
+    '''
     query = "insert into itemlist (item_name,item_rate,item_type) values(%s,%s,%s);"
     val = (name, rate, type)
     mycursor.execute(query, val)
@@ -104,11 +145,30 @@ def additem():
     itemnameVar.set("")
     itemrateVar.set("")
     itemTypeVar.set("")
-
+    getItemInTreeView()
 ################## add item window ##################
 itemnameVar=StringVar()
 itemrateVar=StringVar()
 itemTypeVar=StringVar()
+
+########## update #################
+
+def updateItem():
+    name = itemnameVar.get()
+    rate = itemrateVar.get()
+    type = itemTypeVar.get()
+    #print(name, rate, type)
+    db_connect()
+    query = "update itemlist set item_rate=%s,item_type=%s where item_name=%s"
+    val = (rate, type,name)
+    mycursor.execute(query, val)
+    connection.commit()
+    messagebox.showinfo(" Data Updated", 'Item Updateded Successfully')
+    itemnameVar.set("")
+    itemrateVar.set("")
+    itemTypeVar.set("")
+    getItemInTreeView()
+
 
 def additemwindow():
     remove_all_widgets()
@@ -155,14 +215,14 @@ def additemwindow():
 
     additemButton = Button(taz, text="Add Item", width=20, height=2, fg="green", bd=10,command=additem)
     additemButton.grid(row=3, column=3, columnspan=1)
-    '''
+
     updateButton = Button(taz, text="UpDate Item", width=20, height=2, fg="green", bd=10, command=updateItem)
     updateButton.grid(row=1, column=3, columnspan=1)
-
+    '''
     deleteButton = Button(taz, text="Delete Item", width=20, height=2, fg="green", bd=10,command=deleteItem)
     deleteButton.grid(row=6, column=3, columnspan=1)
-
-    ###############################################
+    '''
+###############################################
     tazTV.grid(row=7, column=0, columnspan=3)
     style=ttk.Style(taz)
     style.theme_use('clam')
@@ -172,12 +232,12 @@ def additemwindow():
 
     tazTV.configure(yscrollcommand=scrollBar.set)
 
-    tazTV.heading('#0', text="Item Name")
+    tazTV.heading('#0', text="Item Name1111")
     tazTV.heading('#1', text="Rate")
     tazTV.heading('#2', text="Type")
 
     getItemInTreeView()
-    '''
+
 taz.title("Hotel Management System")
 mainheading()
 login_window()
